@@ -108,38 +108,39 @@ document.querySelectorAll(".hamburger").forEach((element) => {
   
   
   // Navbar Scroll Behavior
-  document.addEventListener('scroll', () => {
-      const navbar = document.getElementById('navbar');
-      const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+document.addEventListener('scroll', () => {
+    const navbar = document.getElementById('navbar');
+    const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+  
+    if (scrollPosition > 50) { // Adjust this value based on when you want the patch to appear
+      navbar.classList.add('nav-scrolled');
+    } else {
+      navbar.classList.remove('nav-scrolled');
+    }
+  
+    // Section active state detection
+    const sections = document.querySelectorAll("section");
+    const navLinks = document.querySelectorAll(".nav-links li a");
     
-    //   if (scrollPosition > 50) { // Adjust this value based on when you want the patch to appear
-    //     navbar.classList.add('nav-scrolled');
-    //   } else {
-    //     navbar.classList.remove('nav-scrolled');
-    //   }
+    let currentSection = "";  // Store the current section ID
     
-      // Section active state detection
-      const sections = document.querySelectorAll("section");
-      const navLinks = document.querySelectorAll(".nav-links li a");
-      
-      let currentSection = "";  // Store the current section ID
-      
-      sections.forEach((section) => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        if (pageYOffset >= sectionTop - sectionHeight / 3) {
-          currentSection = section.getAttribute("id");
+    sections.forEach((section) => {
+      const sectionTop = section.offsetTop;
+      const sectionHeight = section.clientHeight;
+      if (pageYOffset >= sectionTop - sectionHeight / 3) {
+        currentSection = section.getAttribute("id");
+      }
+    });
+  
+    navLinks.forEach((link) => {
+        link.classList.remove("active");
+        if (link.getAttribute("href") === `#${currentSection}`) {
+          link.classList.add("active");
+          console.log(`${link.getAttribute("href")} is now active`);
         }
       });
-    
-      navLinks.forEach((link) => {
-          link.classList.remove("active");
-          if (link.getAttribute("href") === `#${currentSection}`) {
-            link.classList.add("active");
-            console.log(`${link.getAttribute("href")} is now active`);
-          }
-        });
-    });
+  });
+
     
     // Patches
     const patches = document.querySelectorAll('.patch');
@@ -275,3 +276,95 @@ document.querySelectorAll(".hamburger").forEach((element) => {
        }
    }
   }
+
+
+
+
+  // odometer
+  document.addEventListener("DOMContentLoaded", function() {
+    const elements = document.querySelectorAll('.num-num');
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const el = entry.target;
+                const odometerElement = el.querySelector('.odometer');
+                if (odometerElement) {
+                    const targetValue = parseInt(el.getAttribute('data-num'), 10);
+                    const odometer = new Odometer({
+                        el: odometerElement,
+                        value: 0,
+                        format: '(,ddd)',
+                        duration: 3000,
+                        theme: 'default'
+                    });
+                    odometer.render();
+
+                    // Start the odometer animation
+                    setTimeout(() => {
+                        odometer.update(targetValue);
+                    }, 100); // Initial animation delay
+
+                    // Disconnect observer after animation
+                    observer.unobserve(el);
+                }
+            }
+        });
+    }, { threshold: 0.1 }); // Trigger when 10% of the element is visible
+
+    elements.forEach(el => {
+        observer.observe(el);
+    });
+});
+
+
+// overview popup
+const overPics = document.querySelectorAll(".over-pic");
+const popup = document.querySelector(".popup");
+const popupImg = document.querySelector(".popup-img");
+const close = document.querySelector(".close");
+const prevBtn = document.querySelector(".prev");
+const nextBtn = document.querySelector(".next");
+
+let currentIndex = 0;
+let images = [];
+
+overPics.forEach((pic, index) => {
+    images.push(pic.getAttribute("data-src"));
+    
+    pic.addEventListener("click", () => {
+        currentIndex = index;
+        showImage(currentIndex);
+        popup.style.display = "flex";
+    });
+});
+
+function showImage(index) {
+    popupImg.src = images[index];
+}
+
+// Close Popup
+close.addEventListener("click", () => {
+    popup.style.display = "none";
+});
+
+// Navigate Images
+prevBtn.addEventListener("click", () => {
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    showImage(currentIndex);
+});
+
+nextBtn.addEventListener("click", () => {
+    currentIndex = (currentIndex + 1) % images.length;
+    showImage(currentIndex);
+});
+
+// Close on outside click
+popup.addEventListener("click", (e) => {
+    if (e.target === popup) {
+        popup.style.display = "none";
+    } 
+});
+// close.addEventListener("click", () => {
+//   popup.style.display = "none";
+// });
