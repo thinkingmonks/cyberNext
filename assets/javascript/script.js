@@ -207,7 +207,7 @@ document.addEventListener('scroll', () => {
   
     // count down
   // Set the date we're counting down to
-  var countDownDate = new Date("2025-04-23T07:59:59+02:00").getTime();
+  var countDownDate = new Date("2025-05-20T07:59:59+02:00").getTime();
   
   // Update the count down every 1 second
   var u = setInterval(function() {
@@ -368,3 +368,102 @@ popup.addEventListener("click", (e) => {
 // close.addEventListener("click", () => {
 //   popup.style.display = "none";
 // });
+
+
+
+
+document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible") {
+        startSwiper();
+    }
+});
+
+let swiperInitialized = false;
+
+function startSwiper() {
+    if (!swiperInitialized) {
+        swiperInitialized = true; // Ensure Swiper initializes only once
+        
+        new Swiper(".mySwiper", {
+            direction: "vertical",
+            slidesPerView: 5,
+            initialSlide: 0,
+            autoplay: {
+                delay: 5000,
+            },
+            loop: true,
+            spaceBetween: 10,
+            mousewheel: false,
+            reverseDirection: true,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            breakpoints: {
+                1024: {
+                    slidesPerView: 6,
+                },
+                768: {
+                    slidesPerView: 4,
+                },
+                100: {
+                    slidesPerView: 4,
+                    reverseDirection: true,
+                },
+            },
+        });
+    }
+}
+
+
+// gallery
+$('.gallery-up').owlCarousel({
+    items:4,
+    loop:true,
+    margin:15,
+    autoplay: true,
+    nav: false,
+    dots: false,
+    slideBy:1,
+    smartSpeed:800,
+    autoplayTimeout: 3000,
+    responsiveClass:true,
+    responsive:{
+      0:{
+          items:1,
+      },
+      600:{
+          items:1,
+          nav:false
+      },
+      1000:{
+          items:2,
+      }
+  }
+  });
+
+  $('.gallery-down').owlCarousel({
+    items:4,
+    loop:true,
+    rtl:true,
+    margin:15,
+    autoplay: true,
+    nav: false,
+    dots: false,
+    slideBy:1,
+    smartSpeed:800,
+    autoplayTimeout: 3000,
+    responsiveClass:true,
+    responsive:{
+      0:{
+          items:1,
+      },
+      600:{
+          items:1,
+          nav:false
+      },
+      1000:{
+          items:2,
+      }
+  }
+  })
