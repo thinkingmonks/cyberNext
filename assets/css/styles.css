@@ -309,6 +309,7 @@ body,html {
   .hero-vid{
     position: absolute;
     width: 101%;
+    top: 0;
   }
   .hero-color-patch{
     position: absolute;
